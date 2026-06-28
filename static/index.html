@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Web Workflow</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <h1>AI Web Workflow</h1>
+          <p>本地图片和视频生成工作台</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="keyState" class="status-pill">正在读取设置</span>
+        <button id="settingsToggle" type="button">打开设置</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="control-panel" aria-labelledby="composeTitle">
+        <div class="section-head">
+          <div>
+            <h2 id="composeTitle">生成内容</h2>
+            <p>填写 Prompt，选择图片或视频，然后创建任务。</p>
+          </div>
+        </div>
+
+        <div class="segmented" role="tablist" aria-label="生成类型">
+          <button class="mode is-active" data-mode="image" type="button" role="tab" aria-selected="true">
+            图片
+          </button>
+          <button class="mode" data-mode="video" type="button" role="tab" aria-selected="false">
+            视频
+          </button>
+        </div>
+
+        <label class="field">
+          <span>Prompt</span>
+          <textarea id="prompt" rows="8" placeholder="例如：窗边玻璃茶壶，电影感光线，浅景深"></textarea>
+        </label>
+
+        <div id="imageOptions" class="option-grid">
+          <label class="field">
+            <span>生成方式</span>
+            <select id="imageMode">
+              <option value="text">文生图</option>
+              <option value="image">图生图</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>图片模型</span>
+            <select id="imageModel"></select>
+          </label>
+          <label class="field">
+            <span>图片比例</span>
+            <select id="imageAspect">
+              <option value="1:1">1:1 方图</option>
+              <option value="16:9">16:9 横图</option>
+              <option value="9:16">9:16 竖图</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>数量</span>
+            <select id="imageCount">
+              <option value="1">1 张</option>
+            </select>
+          </label>
+          <label id="imageReferenceField" class="field hidden">
+            <span>参考图</span>
+            <input id="imageReference" type="file" accept="image/*" />
+          </label>
+        </div>
+
+        <div id="videoOptions" class="option-grid hidden">
+          <label class="field">
+            <span>视频方式</span>
+            <select id="videoMode">
+              <option value="text">文生视频</option>
+              <option value="image">图生视频</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>视频模型</span>
+            <select id="videoModel"></select>
+          </label>
+          <label class="field">
+            <span>视频比例</span>
+            <select id="videoAspect">
+              <option value="9:16">9:16 竖屏</option>
+              <option value="16:9">16:9 横屏</option>
+              <option value="1:1">1:1 方形</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>时长</span>
+            <select id="duration">
+              <option value="6">6 秒</option>
+              <option value="15">15 秒</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>清晰度</span>
+            <select id="resolution">
+              <option value="720p">720p</option>
+              <option value="1080p">1080p</option>
+            </select>
+          </label>
+          <label id="videoReferenceField" class="field hidden">
+            <span>参考图</span>
+            <input id="referenceImage" type="file" accept="image/*" />
+          </label>
+        </div>
+
+        <p id="formHint" class="hint" role="status"></p>
+        <button id="generateBtn" class="primary-action" type="button">开始生成</button>
+      </section>
+
+      <section class="results-panel" aria-labelledby="tasksTitle">
+        <div class="section-head">
+          <div>
+            <h2 id="tasksTitle">任务和结果</h2>
+            <p>任务会自动刷新，完成后在这里预览本地文件。</p>
+          </div>
+        </div>
+        <div id="taskList" class="task-list">
+          <div class="empty-state">
+            <strong>还没有任务</strong>
+            <p>左侧开始一次生成后，进度和预览会显示在这里。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="settingsDialog">
+      <form method="dialog" class="settings-form">
+        <div class="section-head">
+          <div>
+            <h2>设置</h2>
+            <p>API key 只保存在本机的 config.local.json。</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>API Base URL</span>
+          <input id="apiBaseUrl" type="text" value="https://api.x.ai" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>API Key</span>
+          <input id="apiKey" type="password" placeholder="粘贴 API key" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>输出目录</span>
+          <input id="outputDir" type="text" value="outputs" autocomplete="off" />
+        </label>
+        <p id="configHint" class="hint" role="status"></p>
+        <div class="dialog-actions">
+          <button type="submit">关闭</button>
+          <button id="saveConfigBtn" class="primary-action" type="button">保存设置</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
